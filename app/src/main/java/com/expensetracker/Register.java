@@ -55,11 +55,11 @@ public class Register extends AppCompatActivity {
         });
 
         // Initialize UI elements
-        email = binding.email;
-        password = binding.password;
-        repeat_password = binding.repeatPassword;
-        registerButton = binding.registerButton;
-        progressBar = binding.progressBar;
+            email = binding.email;
+            password = binding.password;
+            repeat_password = binding.repeatPassword;
+            registerButton = binding.registerButton;
+            progressBar = binding.progressBar;
 
         // Register button click listener
         registerButton.setOnClickListener(view -> {
