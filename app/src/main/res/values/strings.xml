@@ -1,3 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">EXPENSE TRACKER</string>
+
+    <string-array name="expense_categories">
+        <item>Food</item>
+        <item>Entertainment</item>
+        <item>Fuel</item>
+        <item>Other</item>
+    </string-array>
+
 </resources>

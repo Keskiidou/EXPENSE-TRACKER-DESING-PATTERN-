@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <!-- Display the user's total income -->
+    <TextView
+        android:id="@+id/incomeValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$0.00"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp" />
+
+    <!-- Input field for the user to enter their monthly income -->
+    <EditText
+        android:id="@+id/incomeInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter monthly income"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@id/incomeValue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp" />
+
+    <!-- Input field for the user to enter their savings percentage -->
+    <EditText
+        android:id="@+id/savingsInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter savings % (e.g., 20)"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@id/incomeInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="20dp" />
+
+    <!-- Button to update income and savings -->
+    <Button
+        android:id="@+id/updateIncomeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        app:layout_constraintTop_toBottomOf="@id/savingsInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Text showing the daily money based on the spendable amount -->
+    <TextView
+        android:id="@+id/dailyMoneyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Daily Money: $0.00"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/updateIncomeBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
+
+    <!-- Text showing the current spendable money -->
+    <TextView
+        android:id="@+id/spendableMoneyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Spendable Money: $0.00"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/dailyMoneyText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <!-- Input field for the user to enter the expense amount -->
+    <EditText
+        android:id="@+id/expenseAmountInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Expense amount"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@id/spendableMoneyText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp" />
+
+    <!-- Spinner to select the category of the expense (e.g., Food, Entertainment, etc.) -->
+    <Spinner
+        android:id="@+id/expenseCategorySpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/expenseAmountInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Button to add the expense -->
+    <Button
+        android:id="@+id/addExpenseBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Expense"
+        app:layout_constraintTop_toBottomOf="@id/expenseAmountInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

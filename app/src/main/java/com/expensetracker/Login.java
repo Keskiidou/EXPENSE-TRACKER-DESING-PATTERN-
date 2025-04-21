@@ -1,20 +1,34 @@
 package com.expensetracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.expensetracker.databinding.ActivityLoginBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        mAuth = FirebaseAuth.getInstance();
+
+        // If user is already logged in, skip to income activity
+//        if (mAuth.getCurrentUser() != null) {
+//            startActivity(new Intent(Login.this, income.class));
+//            finish();
+//            return;
+//        }
 
         // Apply gradient background based on theme
         int nightModeFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
@@ -23,6 +37,7 @@ public class Login extends AppCompatActivity {
         } else {
             binding.main.setBackgroundResource(R.drawable.gradient_background);
         }
+
         // Animate elements
         animateViews();
 
@@ -30,24 +45,34 @@ public class Login extends AppCompatActivity {
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = binding.email.getText().toString();
-                String password = binding.password.getText().toString();
+                String email = binding.email.getText().toString().trim();
+                String password = binding.password.getText().toString().trim();
 
                 if (!email.isEmpty() && !password.isEmpty()) {
-                    // Simulate login (replace with actual authentication logic)
-                    Toast.makeText(Login.this, "Logging in...", Toast.LENGTH_SHORT).show();
+                    binding.loginButton.setEnabled(false); // prevent double taps
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnSuccessListener(authResult -> {
+                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(Login.this, income.class);
+                                startActivity(intent);
+                                finish(); // closes login screen
+                            })
+                            .addOnFailureListener(e -> {
+                                binding.loginButton.setEnabled(true);
+                                Toast.makeText(Login.this, "Login failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            });
                 } else {
                     Toast.makeText(Login.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        // Sign up prompt click
+        // Sign up prompt click (navigate to Register page)
         binding.signupPrompt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to sign-up activity (implement as needed)
-                Toast.makeText(Login.this, "Navigate to Sign Up", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Login.this, Register.class);
+                startActivity(intent);
             }
         });
     }
