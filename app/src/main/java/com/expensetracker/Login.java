@@ -2,24 +2,32 @@ package com.expensetracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.expensetracker.databinding.ActivityLoginBinding;
+
 import com.google.firebase.auth.FirebaseAuth;
+
 
 public class Login extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
+
     private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -29,6 +37,7 @@ public class Login extends AppCompatActivity {
 //            finish();
 //            return;
 //        }
+
 
         // Apply gradient background based on theme
         int nightModeFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
@@ -40,8 +49,12 @@ public class Login extends AppCompatActivity {
 
         // Animate elements
         animateViews();
-
+        email = binding.email;
+        password = binding.password;
+        loginButton = binding.loginButton;
+        progressBar = binding.progressBar;
         // Login button click
+
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,15 +77,43 @@ public class Login extends AppCompatActivity {
                 } else {
                     Toast.makeText(Login.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 }
+
             }
+            auth.signInWithEmailAndPassword(emailInput, passwordInput)
+                    .addOnCompleteListener(this, task ->  {
+
+                            if (task.isSuccessful()) {
+
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = auth.getCurrentUser();
+                                if (user != null) {
+                                    String email = user.getEmail();
+                                    String uid = user.getUid();
+                                    Log.d(TAG, "User logged in: Email = " + email + ", UID = " + uid);
+                                }
+
+                            } else {
+
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(Login.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+
+                            }
+
+                    });
+
+
+
         });
 
         // Sign up prompt click (navigate to Register page)
         binding.signupPrompt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(Login.this, Register.class);
                 startActivity(intent);
+
             }
         });
     }
