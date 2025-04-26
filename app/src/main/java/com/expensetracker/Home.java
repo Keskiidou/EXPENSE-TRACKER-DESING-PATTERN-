@@ -31,6 +31,13 @@ public class Home extends AppCompatActivity {
                 overridePendingTransition(0,0);
                 return true;
             }
+            else if (item.getItemId() == R.id.nav_expense) {
+
+                Intent intent = new Intent(Home.this, expenses.class);
+                startActivity(intent);
+                overridePendingTransition(0,0);
+                return true;
+            }
             return false;
         });
     }
