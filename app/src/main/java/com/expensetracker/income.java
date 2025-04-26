@@ -1,5 +1,6 @@
 package com.expensetracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -51,10 +54,34 @@ public class income extends AppCompatActivity {
         updateBtn = findViewById(R.id.updateIncomeBtn);
         addExpenseBtn = findViewById(R.id.addExpenseBtn);
         expenseCategorySpinner = findViewById(R.id.expenseCategorySpinner);
-
+        BottomNavigationView bottomNav;
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
+
+        bottomNav = findViewById(R.id.bottom_nav);
+
+
+        bottomNav.setSelectedItemId(R.id.nav_settings);
+
+        bottomNav.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_home) {
+
+                Intent intent = new Intent(income.this, Home.class);
+                startActivity(intent);
+                overridePendingTransition(0,0);
+                return true;
+            } else if (item.getItemId() == R.id.nav_settings) {
+                return true;
+            } else if (item.getItemId() == R.id.nav_profile) {
+
+                Intent intent = new Intent(income.this, Profile.class);
+                startActivity(intent);
+                overridePendingTransition(0,0);
+                return true;
+            }
+            return false;
+        });
         if (currentUser == null) {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             finish();

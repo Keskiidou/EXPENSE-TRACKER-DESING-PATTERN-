@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp">
+    tools:context=".income">
 
     <!-- Display the user's total income -->
     <TextView
@@ -13,104 +14,164 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="$0.00"
-        android:textSize="24sp"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="48dp" />
 
-    <!-- Input field for the user to enter their monthly income -->
-    <EditText
-        android:id="@+id/incomeInput"
+    <!-- Input field for monthly income -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/incomeInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Enter monthly income"
-        android:inputType="numberDecimal"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintTop_toBottomOf="@id/incomeValue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:layout_marginHorizontal="20dp" />
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="24dp">
 
-    <!-- Input field for the user to enter their savings percentage -->
-    <EditText
-        android:id="@+id/savingsInput"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/incomeInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:textColor="@color/primary_text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Input field for savings percentage -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/savingsInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Enter savings % (e.g., 20)"
-        android:inputType="numberDecimal"
-        app:layout_constraintTop_toBottomOf="@id/incomeInput"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintTop_toBottomOf="@id/incomeInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="20dp" />
+        android:layout_marginHorizontal="24dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/savingsInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:textColor="@color/primary_text" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Button to update income and savings -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/updateIncomeBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Update"
-        app:layout_constraintTop_toBottomOf="@id/savingsInput"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/primary"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/savingsInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="24dp" />
 
-    <!-- Text showing the daily money based on the spendable amount -->
+    <!-- Text showing the daily money -->
     <TextView
         android:id="@+id/dailyMoneyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Daily Money: $0.00"
         android:textSize="18sp"
+        android:textColor="@color/secondary_text"
         app:layout_constraintTop_toBottomOf="@id/updateIncomeBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="32dp" />
 
-    <!-- Text showing the current spendable money -->
+    <!-- Text showing the spendable money -->
     <TextView
         android:id="@+id/spendableMoneyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Spendable Money: $0.00"
         android:textSize="18sp"
+        android:textColor="@color/secondary_text"
         app:layout_constraintTop_toBottomOf="@id/dailyMoneyText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp" />
-
-    <!-- Input field for the user to enter the expense amount -->
-    <EditText
-        android:id="@+id/expenseAmountInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Expense amount"
-        android:inputType="numberDecimal"
-        app:layout_constraintTop_toBottomOf="@id/spendableMoneyText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp" />
-
-    <!-- Spinner to select the category of the expense (e.g., Food, Entertainment, etc.) -->
-    <Spinner
-        android:id="@+id/expenseCategorySpinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/expenseAmountInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Button to add the expense -->
-    <Button
+    <!-- Input field for expense amount -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/expenseAmountInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Expense amount"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintTop_toBottomOf="@id/spendableMoneyText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="24dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/expenseAmountInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:textColor="@color/primary_text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Spinner for expense category -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/expenseCategoryLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        app:layout_constraintTop_toBottomOf="@id/expenseAmountInputLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="24dp">
+
+        <Spinner
+            android:id="@+id/expenseCategorySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Button to add expense -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/addExpenseBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Expense"
-        app:layout_constraintTop_toBottomOf="@id/expenseAmountInput"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/primary"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/expenseCategoryLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp" />
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_nav_background"
+        app:elevation="8dp"
+        app:itemIconTint="@color/nav_item_tint"
+        app:itemTextColor="@color/nav_item_tint"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

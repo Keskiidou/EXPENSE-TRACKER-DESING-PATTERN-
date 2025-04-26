@@ -8,5 +8,8 @@
         <item>Fuel</item>
         <item>Other</item>
     </string-array>
+    <string name="default_web_client_id">642887534055-tokap7km07kei21mo4rdakb3tubocr2n.apps.googleusercontent.com</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
