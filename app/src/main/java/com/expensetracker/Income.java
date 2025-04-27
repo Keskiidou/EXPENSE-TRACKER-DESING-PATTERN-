@@ -1,9 +1,9 @@
 package com.expensetracker;
+import com.expensetracker.commands.AddExpenseCommand;
+import com.expensetracker.CommandManager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.FirebaseApp;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -23,7 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class income extends AppCompatActivity {
+public class Income extends AppCompatActivity {
 
     private TextView incomeValue, dailyMoneyText, spendableMoneyText;
     private EditText incomeInput, savingsInput, expenseAmountInput;
@@ -33,6 +33,8 @@ public class income extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
     private DocumentReference userIncomeRef;
+    private CommandManager commandManager = new CommandManager();
+
     private String userId;
 
     private double totalIncome = 0.0;
@@ -57,6 +59,12 @@ public class income extends AppCompatActivity {
         BottomNavigationView bottomNav;
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        Button undoBtn = findViewById(R.id.undoBtn);
+        undoBtn.setOnClickListener(v -> {
+            commandManager.undoLastCommand();
+            // you may want to reload the whole screen or otherwise refresh UI
+        });
+
 
 
         bottomNav = findViewById(R.id.bottom_nav);
@@ -67,7 +75,7 @@ public class income extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_home) {
 
-                Intent intent = new Intent(income.this, Home.class);
+                Intent intent = new Intent(Income.this, Home.class);
                 startActivity(intent);
                 overridePendingTransition(0,0);
                 return true;
@@ -75,7 +83,7 @@ public class income extends AppCompatActivity {
                 return true;
             } else if (item.getItemId() == R.id.nav_profile) {
 
-                Intent intent = new Intent(income.this, Profile.class);
+                Intent intent = new Intent(Income.this, Profile.class);
                 startActivity(intent);
                 overridePendingTransition(0,0);
                 return true;
@@ -123,66 +131,70 @@ public class income extends AppCompatActivity {
 
                     userIncomeRef.set(incomeData)
                             .addOnSuccessListener(aVoid ->
-                                    Toast.makeText(income.this, "Data saved", Toast.LENGTH_SHORT).show())
+                                    Toast.makeText(Income.this, "Data saved", Toast.LENGTH_SHORT).show())
                             .addOnFailureListener(e ->
-                                    Toast.makeText(income.this, "Failed to save data", Toast.LENGTH_SHORT).show());
+                                    Toast.makeText(Income.this, "Failed to save data", Toast.LENGTH_SHORT).show());
 
                 } catch (NumberFormatException e) {
-                    Toast.makeText(income.this, "Invalid input", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Income.this, "Invalid input", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(income.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Income.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
             }
         });
 
         addExpenseBtn.setOnClickListener(view -> {
             String amountStr = expenseAmountInput.getText().toString().trim();
-            String category = expenseCategorySpinner.getSelectedItem().toString().trim();
+            String category  = expenseCategorySpinner.getSelectedItem().toString();
 
-            if (!amountStr.isEmpty() && !category.isEmpty()) {
-                try {
-                    double expenseAmount = Double.parseDouble(amountStr);
-
-                    // Update total expenses and spendable money
-                    totalExpenses += expenseAmount;
-                    spendableMoney -= expenseAmount;
-
-                    // Update the displayed spendable money
-                    spendableMoneyText.setText("Spendable Money: $" + String.format("%.2f", spendableMoney));
-
-                    // Update the user's spendable money in Firestore
-                    Map<String, Object> userData = new HashMap<>();
-                    userData.put("spendableMoney", spendableMoney);
-
-                    userIncomeRef.update(userData)
-                            .addOnSuccessListener(aVoid -> {
-                                // Adding expense data to the expenses collection
-                                Map<String, Object> expenseData = new HashMap<>();
-                                expenseData.put("userId", userId);
-                                expenseData.put("amount", expenseAmount);
-                                expenseData.put("category", category);
-                                expenseData.put("timestamp", System.currentTimeMillis());
-
-                                db.collection("expenses").add(expenseData)
-                                        .addOnSuccessListener(documentReference -> {
-                                            Toast.makeText(income.this, "Expense added!", Toast.LENGTH_SHORT).show();
-                                            expenseAmountInput.setText("");
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Toast.makeText(income.this, "Failed to add expense", Toast.LENGTH_SHORT).show();
-                                        });
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(income.this, "Failed to update spendable money", Toast.LENGTH_SHORT).show();
-                            });
-
-                } catch (NumberFormatException e) {
-                    Toast.makeText(income.this, "Invalid amount", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(income.this, "Enter all expense fields", Toast.LENGTH_SHORT).show();
+            if (amountStr.isEmpty()) {
+                Toast.makeText(this, "Enter all expense fields", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            double expenseAmount;
+            try {
+                expenseAmount = Double.parseDouble(amountStr);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid amount", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Build the Firestore data
+            Map<String, Object> expenseData = new HashMap<>();
+            expenseData.put("userId", userId);
+            expenseData.put("amount", expenseAmount);
+            expenseData.put("category", category);
+            expenseData.put("timestamp", System.currentTimeMillis());
+
+            // Create & execute the AddExpenseCommand
+            AddExpenseCommand cmd = new AddExpenseCommand(db, expenseData);
+            commandManager.executeCommand(cmd);
+
+            // Update spendable money locally
+            totalExpenses     += expenseAmount;
+            spendableMoney    -= expenseAmount;
+            spendableMoneyText.setText("Spendable Money: $" + String.format("%.2f", spendableMoney));
+
+            // Persist spendable money
+            userIncomeRef.update("spendableMoney", spendableMoney);
+
+            // Show a Snackbar with “Undo”
+            Snackbar.make(spendableMoneyText, "Expense added", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO", v -> {
+                        commandManager.undoLastCommand();
+                        // revert spendable money UI + Firestore
+                        totalExpenses  -= expenseAmount;
+                        spendableMoney += expenseAmount;
+                        spendableMoneyText.setText("Spendable Money: $" + String.format("%.2f", spendableMoney));
+                        userIncomeRef.update("spendableMoney", spendableMoney);
+                    })
+                    .show();
+
+            // clear input
+            expenseAmountInput.setText("");
         });
+
 
     }
 
@@ -212,7 +224,7 @@ public class income extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(income.this, "Failed to load data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Income.this, "Failed to load data", Toast.LENGTH_SHORT).show();
                 });
     }
 

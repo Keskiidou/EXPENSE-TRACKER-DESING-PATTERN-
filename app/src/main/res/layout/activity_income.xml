@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".income">
+    tools:context=".Income">
 
     <!-- Display the user's total income -->
     <TextView
@@ -105,6 +105,15 @@
         android:layout_marginTop="16dp" />
 
     <!-- Input field for expense amount -->
+    <Button
+        android:id="@+id/undoBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Undo last action"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/expenseAmountInputLayout"
         android:layout_width="0dp"
@@ -159,6 +168,9 @@
         android:layout_marginTop="24dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav"
         android:layout_marginBottom="16dp" />
+
+
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"

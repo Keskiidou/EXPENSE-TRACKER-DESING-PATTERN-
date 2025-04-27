@@ -21,7 +21,7 @@ public class Home extends AppCompatActivity {
 
                 return true;
             } else if (item.getItemId() == R.id.nav_settings) {
-                Intent intent = new Intent(Home.this, income.class);
+                Intent intent = new Intent(Home.this, Income.class);
                 startActivity(intent);
                 return true;
             }else if (item.getItemId() == R.id.nav_profile) {
@@ -33,7 +33,7 @@ public class Home extends AppCompatActivity {
             }
             else if (item.getItemId() == R.id.nav_expense) {
 
-                Intent intent = new Intent(Home.this, expenses.class);
+                Intent intent = new Intent(Home.this, Expenses.class);
                 startActivity(intent);
                 overridePendingTransition(0,0);
                 return true;
