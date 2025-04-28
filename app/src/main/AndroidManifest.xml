@@ -19,13 +19,13 @@
             android:name=".Home"
             android:exported="false" />
         <activity
-            android:name=".expenses"
+            android:name=".Expenses"
             android:exported="false" />
         <activity
             android:name=".Login"
             android:exported="false" /> <!-- Remove launcher intent filter, not exported -->
         <activity
-            android:name=".income"
+            android:name=".Income"
             android:exported="false" />
         <activity
             android:name=".Register"

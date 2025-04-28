@@ -36,13 +36,20 @@ public class Home extends AppCompatActivity {
             if (item.getItemId() == R.id.nav_home) {
                 return true;
             } else if (item.getItemId() == R.id.nav_settings) {
-                Intent intent = new Intent(Home.this, income.class);
+                Intent intent = new Intent(Home.this, Income.class);
                 startActivity(intent);
                 return true;
             } else if (item.getItemId() == R.id.nav_profile) {
                 Intent intent = new Intent(Home.this, Profile.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+                return true;
+            }
+            else if (item.getItemId() == R.id.nav_expense) {
+
+                Intent intent = new Intent(Home.this, Expenses.class);
+                startActivity(intent);
+                overridePendingTransition(0,0);
                 return true;
             }
             return false;
